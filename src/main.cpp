@@ -5,14 +5,20 @@
 
 const std::string letters = "abcdefghijklmnopqrstuvwxyv";
 
-std::string encode(std::string input, std::string key)
+int handleKeyIndex(const std::string key, const int index)
+{
+    const int newKeyIndex = key[index] ? key[index] : key[index % key.size()];
+    return newKeyIndex;
+}
+
+std::string encode(const std::string input, const std::string key)
 {
     std::string output;
 
-    for (int i = 0; i < input.size(); i++)
+    for (int index = 0; index < input.size(); index++)
     {
-        const int inputIndex = letters.find(input[i]);
-        const int keyIndex = letters.find(key[i] ? key[i] : key[i % key.size()]);
+        const int inputIndex = letters.find(input[index]);
+        const int keyIndex = letters.find(handleKeyIndex(key, index));
         const int newIndex = (inputIndex + keyIndex) % letters.size();
         output += letters[newIndex];
     }
@@ -20,14 +26,14 @@ std::string encode(std::string input, std::string key)
     return output;
 }
 
-std::string decode(std::string input, std::string key)
+std::string decode(const std::string input, const std::string key)
 {
     std::string output;
 
-    for (int i = 0; i < input.size(); i++)
+    for (int index = 0; index < input.size(); index++)
     {
-        const int inputIndex = letters.find(input[i]);
-        const int keyIndex = letters.find(key[i] ? key[i] : key[i % key.size()]);
+        const int inputIndex = letters.find(input[index]);
+        const int keyIndex = letters.find(handleKeyIndex(key, index));
         const int newIndex = (inputIndex - keyIndex + letters.size()) % letters.size();
         output += letters[newIndex];
     }
