@@ -2,23 +2,33 @@
 #include <string>
 #include <stdexcept>
 #include <cstdlib>
+#include <algorithm>
+#include <cctype>
 
-const std::string letters = "abcdefghijklmnopqrstuvwxyv";
+const std::string letters = "abcdefghijklmnopqrstuvwxyz";
 
-int handleKeyIndex(const std::string key, const int index)
+std::string toLowerCase(const std::string &str)
 {
-    const int newKeyIndex = key[index] ? key[index] : key[index % key.size()];
-    return newKeyIndex;
+    std::string lowerStr = str;
+    std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+    return lowerStr;
 }
 
-std::string encode(const std::string input, const std::string key)
+std::string encode(const std::string &input, const std::string &key)
 {
+    const std::string lowerInput = toLowerCase(input);
+
     std::string output;
 
-    for (int index = 0; index < input.size(); index++)
+    for (size_t index = 0; index < lowerInput.size(); index++)
     {
-        const int inputIndex = letters.find(input[index]);
-        const int keyIndex = letters.find(handleKeyIndex(key, index));
+        if (lowerInput[index] == ' ')
+        {
+            output += ' ';
+            continue;
+        }
+        const int inputIndex = letters.find(lowerInput[index]);
+        const int keyIndex = letters.find(key[index % key.size()]);
         const int newIndex = (inputIndex + keyIndex) % letters.size();
         output += letters[newIndex];
     }
@@ -26,14 +36,21 @@ std::string encode(const std::string input, const std::string key)
     return output;
 }
 
-std::string decode(const std::string input, const std::string key)
+std::string decode(const std::string &input, const std::string &key)
 {
+    const std::string lowerInput = toLowerCase(input);
+
     std::string output;
 
-    for (int index = 0; index < input.size(); index++)
+    for (size_t index = 0; index < lowerInput.size(); index++)
     {
-        const int inputIndex = letters.find(input[index]);
-        const int keyIndex = letters.find(handleKeyIndex(key, index));
+        if (lowerInput[index] == ' ')
+        {
+            output += ' ';
+            continue;
+        }
+        const int inputIndex = letters.find(lowerInput[index]);
+        const int keyIndex = letters.find(key[index % key.size()]);
         const int newIndex = (inputIndex - keyIndex + letters.size()) % letters.size();
         output += letters[newIndex];
     }
@@ -72,5 +89,8 @@ int main(int argc, char *argv[])
     {
         std::cerr << "ERROR: syntax error." << std::endl;
         std::cerr << "USE: vigenere <-e|-d> <TEXT> <KEY>" << std::endl;
+        std::cerr << e.what() << std::endl;
+
+        return -1;
     }
 }
