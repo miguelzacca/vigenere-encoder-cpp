@@ -37,14 +37,16 @@ std::string decode(std::string input, std::string key)
 
 void config()
 {
-    system("chmod +x ./config.sh");
-    system("./config.sh");
+    system("chmod +x ~/vigenere-encoder-cpp/config.sh");
+    system("~/vigenere-encoder-cpp/config.sh");
 }
 
 int main(int argc, char *argv[])
 {
     try
     {
+        config();
+
         const std::string input = std::string(argv[2]);
         const std::string key = std::string(argv[3]);
 
