@@ -16,3 +16,28 @@ chmod +x ~/vigenere-encoder-cpp/config.sh
 ```bash
 vigenere <-e|-d> <TEXT> <KEY>
 ```
+
+- `-e` to encode
+- `-d` to decode
+
+## Example
+
+Simple:
+
+```bash
+vigenere -e mysecret mykey
+```
+
+```bash
+vigenere -e "my secret" mykey
+```
+
+File:
+
+```bash
+vigenere -e "$(cat myfile)" mykey
+```
+
+```bash
+vigenere -e "$(cat myfile)" mykey >> cipherFile
+```

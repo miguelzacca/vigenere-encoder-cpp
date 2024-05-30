@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cctype>
 
-const std::string letters = "abcdefghijklmnopqrstuvwxyz";
+static const std::string letters = "abcdefghijklmnopqrstuvwxyz";
 
 std::string toLowerCase(const std::string &str)
 {
@@ -17,6 +17,7 @@ std::string toLowerCase(const std::string &str)
 std::string encode(const std::string &input, const std::string &key)
 {
     const std::string lowerInput = toLowerCase(input);
+    const std::string lowerKey = toLowerCase(key);
 
     std::string output;
     output.reserve(lowerInput.size());
@@ -29,7 +30,7 @@ std::string encode(const std::string &input, const std::string &key)
             continue;
         }
         const std::size_t inputIndex = letters.find(lowerInput[index]);
-        const std::size_t keyIndex = letters.find(key[index % key.size()]);
+        const std::size_t keyIndex = letters.find(lowerKey[index % lowerKey.size()]);
         if (inputIndex == std::string::npos || keyIndex == std::string::npos)
         {
             throw std::invalid_argument("Input or key contains invalid characters.");
@@ -44,6 +45,7 @@ std::string encode(const std::string &input, const std::string &key)
 std::string decode(const std::string &input, const std::string &key)
 {
     const std::string lowerInput = toLowerCase(input);
+    const std::string lowerKey = toLowerCase(key);
 
     std::string output;
     output.reserve(lowerInput.size());
@@ -56,7 +58,7 @@ std::string decode(const std::string &input, const std::string &key)
             continue;
         }
         const std::size_t inputIndex = letters.find(lowerInput[index]);
-        const std::size_t keyIndex = letters.find(key[index % key.size()]);
+        const std::size_t keyIndex = letters.find(lowerKey[index % lowerKey.size()]);
         if (inputIndex == std::string::npos || keyIndex == std::string::npos)
         {
             throw std::invalid_argument("Input or key contains invalid characters.");
