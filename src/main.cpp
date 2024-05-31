@@ -24,17 +24,21 @@ std::string encode(const std::string &input, const std::string &key)
 
     for (std::size_t index = 0; index < lowerInput.size(); ++index)
     {
-        if (lowerInput[index] == ' ')
+        const std::size_t inputIndex = letters.find(lowerInput[index]);
+
+        if (inputIndex == std::string::npos)
         {
-            output += ' ';
+            output += lowerInput[index];
             continue;
         }
-        const std::size_t inputIndex = letters.find(lowerInput[index]);
+
         const std::size_t keyIndex = letters.find(lowerKey[index % lowerKey.size()]);
-        if (inputIndex == std::string::npos || keyIndex == std::string::npos)
+
+        if (keyIndex == std::string::npos)
         {
-            throw std::invalid_argument("Input or key contains invalid characters.");
+            throw std::invalid_argument("Key contains invalid characters.");
         }
+
         const std::size_t newIndex = (inputIndex + keyIndex) % letters.size();
         output += letters[newIndex];
     }
@@ -52,17 +56,21 @@ std::string decode(const std::string &input, const std::string &key)
 
     for (std::size_t index = 0; index < lowerInput.size(); ++index)
     {
-        if (lowerInput[index] == ' ')
+        const std::size_t inputIndex = letters.find(lowerInput[index]);
+
+        if (inputIndex == std::string::npos)
         {
-            output += ' ';
+            output += lowerInput[index];
             continue;
         }
-        const std::size_t inputIndex = letters.find(lowerInput[index]);
+
         const std::size_t keyIndex = letters.find(lowerKey[index % lowerKey.size()]);
-        if (inputIndex == std::string::npos || keyIndex == std::string::npos)
+
+        if (keyIndex == std::string::npos)
         {
-            throw std::invalid_argument("Input or key contains invalid characters.");
+            throw std::invalid_argument("Key contains invalid characters.");
         }
+
         const std::size_t newIndex = (inputIndex + letters.size() - keyIndex) % letters.size();
         output += letters[newIndex];
     }
