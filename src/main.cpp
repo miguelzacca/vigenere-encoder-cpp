@@ -1,113 +1,78 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
-#include <cstdlib>
-#include <algorithm>
 #include <cctype>
 
-static const std::string letters = "abcdefghijklmnopqrstuvwxyz";
+static const std::string LETTERS = "abcdefghijklmnopqrstuvwxyz";
 
-std::string toLowerCase(const std::string &str)
+void toLowerCase(std::string &str)
 {
-    std::string lowerStr = str;
-    std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
-    return lowerStr;
+  for (char &c : str)
+  {
+    c = std::tolower(c);
+  }
 }
 
-std::string encode(const std::string &input, const std::string &key)
+std::string process(const std::string &input, const std::string &key, bool encode)
 {
-    const std::string lowerInput = toLowerCase(input);
-    const std::string lowerKey = toLowerCase(key);
+  std::string output;
+  output.reserve(input.size());
 
-    std::string output;
-    output.reserve(lowerInput.size());
-
-    for (std::size_t index = 0; index < lowerInput.size(); ++index)
+  for (std::size_t i = 0; i < input.size(); ++i)
+  {
+    const std::size_t inputIndex = LETTERS.find(input[i]);
+    if (inputIndex == std::string::npos)
     {
-        const std::size_t inputIndex = letters.find(lowerInput[index]);
-
-        if (inputIndex == std::string::npos)
-        {
-            output += lowerInput[index];
-            continue;
-        }
-
-        const std::size_t keyIndex = letters.find(lowerKey[index % lowerKey.size()]);
-
-        if (keyIndex == std::string::npos)
-        {
-            throw std::invalid_argument("Key contains invalid characters.");
-        }
-
-        const std::size_t newIndex = (inputIndex + keyIndex) % letters.size();
-        output += letters[newIndex];
+      output += input[i];
+      continue;
     }
 
-    return output;
-}
-
-std::string decode(const std::string &input, const std::string &key)
-{
-    const std::string lowerInput = toLowerCase(input);
-    const std::string lowerKey = toLowerCase(key);
-
-    std::string output;
-    output.reserve(lowerInput.size());
-
-    for (std::size_t index = 0; index < lowerInput.size(); ++index)
+    const std::size_t keyIndex = LETTERS.find(key[i % key.size()]);
+    if (keyIndex == std::string::npos)
     {
-        const std::size_t inputIndex = letters.find(lowerInput[index]);
-
-        if (inputIndex == std::string::npos)
-        {
-            output += lowerInput[index];
-            continue;
-        }
-
-        const std::size_t keyIndex = letters.find(lowerKey[index % lowerKey.size()]);
-
-        if (keyIndex == std::string::npos)
-        {
-            throw std::invalid_argument("Key contains invalid characters.");
-        }
-
-        const std::size_t newIndex = (inputIndex + letters.size() - keyIndex) % letters.size();
-        output += letters[newIndex];
+      throw std::invalid_argument("Key contains invalid characters.");
     }
 
-    return output;
+    const std::size_t calc = encode ? inputIndex + keyIndex : inputIndex - keyIndex + LETTERS.size();
+    output += LETTERS[calc % LETTERS.size()];
+  }
+
+  return output;
 }
 
 int main(int argc, char *argv[])
 {
-    try
+  try
+  {
+    if (argc != 4)
     {
-        if (argc != 4)
-        {
-            throw std::invalid_argument("Invalid number of arguments.");
-        }
-
-        const std::string input = argv[2];
-        const std::string key = argv[3];
-
-        if (std::string(argv[1]) == "-e")
-        {
-            std::cout << encode(input, key) << std::endl;
-            return 0;
-        }
-
-        if (std::string(argv[1]) == "-d")
-        {
-            std::cout << decode(input, key) << std::endl;
-            return 0;
-        }
-
-        throw std::invalid_argument("Invalid option.");
+      throw std::invalid_argument("Invalid number of arguments.");
     }
-    catch (const std::exception &e)
+
+    std::string input = argv[2];
+    std::string key = argv[3];
+
+    toLowerCase(input);
+    toLowerCase(key);
+
+    if (std::string(argv[1]) == "-e")
     {
-        std::cerr << "ERROR: " << e.what() << std::endl;
-        std::cerr << "USE: vigenere <-e|-d> <TEXT> <KEY>" << std::endl;
-        return -1;
+      std::cout << process(input, key, true) << std::endl;
+      return 0;
     }
+
+    if (std::string(argv[1]) == "-d")
+    {
+      std::cout << process(input, key, false) << std::endl;
+      return 0;
+    }
+
+    throw std::invalid_argument("Invalid option.");
+  }
+  catch (const std::exception &e)
+  {
+    std::cerr << "ERROR: " << e.what() << std::endl;
+    std::cerr << "USE: vigenere <-e|-d> <TEXT> <KEY>" << std::endl;
+    return -1;
+  }
 }
