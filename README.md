@@ -1,14 +1,20 @@
 # vigenere-encoder-cpp
 
-Vigenere cipher encode/encoder with C++. Linux only.
+Vigenere cipher encode/encoder with C++.
 
-## Install
+## Install - Linux
 
 ```bash
-git clone https://github.com/miguelzacca/vigenere-encoder-cpp
-chmod +x ~/vigenere-encoder-cpp/main
-chmod +x ~/vigenere-encoder-cpp/config.sh
+git clone https://github.com/miguelzacca/vigenere-encoder-cpp.git
+chmod +x ~/vigenere-encoder-cpp/main ~/vigenere-encoder-cpp/config.sh
 ~/vigenere-encoder-cpp/config.sh
+```
+
+## Install - Windows
+
+```cmd
+git clone https://github.com/miguelzacca/vigenere-encoder-cpp.git
+%HOMEPATH%/vigenere-encoder-cpp/config.bat
 ```
 
 ## Use
@@ -32,7 +38,7 @@ vigenere -e mysecret mykey
 vigenere -e "my secret" mykey
 ```
 
-File:
+File (Linux):
 
 ```bash
 vigenere -e "$(cat myfile)" mykey
