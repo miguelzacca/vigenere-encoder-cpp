@@ -6,7 +6,7 @@ Vigenere cipher encode/encoder with C++.
 
 ```bash
 git clone https://github.com/miguelzacca/vigenere-encoder-cpp.git
-chmod +x ~/vigenere-encoder-cpp/main ~/vigenere-encoder-cpp/config.sh
+chmod +x ~/vigenere-encoder-cpp/main-deb ~/vigenere-encoder-cpp/config.sh
 ~/vigenere-encoder-cpp/config.sh
 ```
 
